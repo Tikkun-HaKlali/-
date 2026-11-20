@@ -237,21 +237,21 @@
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1">שם מלא *</label>
-            <input type="text" required placeholder="השם שלך" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
+            <input id="client-name" type="text" required placeholder="השם שלך" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1">טלפון נייד *</label>
-            <input type="tel" required placeholder="050-0000000" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
+            <input id="client-phone" type="tel" required placeholder="050-0000000" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
           </div>
         </div>
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1">עיר מגורים</label>
-            <input type="text" placeholder="למשל: תל אביב, ראשון לציון" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
+            <input id="client-city" type="text" placeholder="למשל: תל אביב, ראשון לציון" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1">נושא הפנייה</label>
-            <select class="w-full rounded-xl border border-slate-300 px-4 py-2.5 bg-white focus:outline-none focus:border-blue-600">
+            <select id="client-topic" class="w-full rounded-xl border border-slate-300 px-4 py-2.5 bg-white focus:outline-none focus:border-blue-600">
               <option>תקלת חשמל / קצר</option>
               <option>לוח חשמל / שדרוג</option>
               <option>נקודות חשמל ותאורה</option>
@@ -262,13 +262,13 @@
         </div>
         <div>
           <label class="block text-sm font-semibold text-slate-700 mb-1">תיאור העבודה או התקלה</label>
-          <textarea rows="3" placeholder="פרט בקצרה מה נדרש..." class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600"></textarea>
+          <textarea id="client-desc" rows="3" placeholder="פרט בקצרה מה נדרש..." class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:border-blue-600"></textarea>
         </div>
-        <button type="submit" class="w-full sm:w-auto bg-blue-900 hover:bg-blue-800 text-white font-bold px-8 py-3 rounded-xl transition">
-          שלח פנייה למשה
+        <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-xl transition">
+          שלח פנייה למשה בוואטסאפ
         </button>
         <p id="form-status" class="hidden text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm font-semibold">
-          ⚡ הפנייה נרשמה בטופס. לחזרה מהירה ניתן גם להתקשר או לשלוח הודעה ל-053-4855033.
+          ⚡ פותח את הווטסאפ עם פרטי הפנייה שלך... אם לא נפתח אוטומטית, אפשר לשלוח ישירות ל-053-4855033.
         </p>
       </form>
     </div>
@@ -306,9 +306,27 @@
     const statusEl = document.getElementById('form-status');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      const name = document.getElementById('client-name').value.trim();
+      const phone = document.getElementById('client-phone').value.trim();
+      const city = document.getElementById('client-city').value.trim();
+      const topic = document.getElementById('client-topic').value.trim();
+      const desc = document.getElementById('client-desc').value.trim();
+      const estPrice = totalEl.textContent.trim();
+
+      const lines = [
+        'שלום משה, אשמח לקבל הצעת מחיר / חזרה:',
+        `שם: ${name}`,
+        `טלפון: ${phone}`
+      ];
+      if (city) lines.push(`עיר: ${city}`);
+      if (topic) lines.push(`נושא: ${topic}`);
+      if (estPrice && estPrice !== '₪0') lines.push(`הערכת מחיר מהמחשבון: ${estPrice}`);
+      if (desc) lines.push(`פירוט: ${desc}`);
+
+      const waUrl = 'https://wa.me/972534855033?text=' + encodeURIComponent(lines.join('\n'));
       statusEl.classList.remove('hidden');
-      form.reset();
-      updateTotal();
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
     });
   </script>
 </body>
