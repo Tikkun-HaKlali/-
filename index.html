@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>תיקון הכללי - האש שלי</title>
+
+  <!-- תגיות שיתוף לווצאפ ורשתות חברתיות (Open Graph) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tikkun-haklali.github.io/" />
+  <meta property="og:title" content="תיקון הכללי — האש שלי" />
+  <meta property="og:description" content="עשרה פרקי תהילים • תוקד עד ביאת המשיח" />
+  <meta property="og:image" content="https://i.ibb.co/zWNgJLkL/IMG-8947.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://i.ibb.co/zWNgJLkL/IMG-8947.jpg" />
+
   <style>
     :root {
       --bg-warm: #FAF6F0;
@@ -237,7 +247,7 @@
       background: var(--bg-warm);
       color: var(--text-main);
       width: 100%;
-      max-width: 600px;
+      max-width: 640px;
       max-height: 85vh;
       overflow-y: auto;
       border-radius: 22px;
@@ -249,13 +259,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       margin-bottom: 14px;
       border-bottom: 1px solid var(--border-soft);
       padding-bottom: 10px;
     }
 
     .close-btn {
-      background: none;
+      background: #FFFFFF;
       border: 1px solid var(--border-soft);
       border-radius: 10px;
       padding: 6px 12px;
@@ -266,9 +277,21 @@
     .chapter-body {
       background: #FFFFFF;
       border-radius: 14px;
-      padding: 16px;
+      padding: 18px;
       margin-bottom: 16px;
       border: 1px solid var(--border-soft);
+      line-height: 1.9;
+      font-size: 1.12rem;
+    }
+
+    .verse-line {
+      margin-bottom: 10px;
+    }
+
+    .verse-num {
+      color: var(--accent-red);
+      font-weight: 700;
+      margin-left: 4px;
     }
 
     .modal-footer-actions {
@@ -285,6 +308,11 @@
       background: #FFFFFF;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     .action-btn.primary {
@@ -378,20 +406,21 @@
 
   <script>
     const chapters = [
-      { num: 1, title: "פרק ט״ז (א)", psalmRef: "תהילים פרק ט״ז" },
-      { num: 2, title: "פרק ל״ב (ב)", psalmRef: "תהילים פרק ל״ב" },
-      { num: 3, title: "פרק מ״א (ג)", psalmRef: "תהילים פרק מ״א" },
-      { num: 4, title: "פרק מ״ב (ד)", psalmRef: "תהילים פרק מ״ב" },
-      { num: 5, title: "פרק נ״ט (ה)", psalmRef: "תהילים פרק נ״ט" },
-      { num: 6, title: "פרק ע״ז (ו)", psalmRef: "תהילים פרק ע״ז" },
-      { num: 7, title: "פרק צ׳ (ז)", psalmRef: "תהילים פרק צ׳" },
-      { num: 8, title: "פרק ק״ה (ח)", psalmRef: "תהילים פרק ק״ה" },
-      { num: 9, title: "פרק קל״ז (ט)", psalmRef: "תהילים פרק קל״ז" },
-      { num: 10, title: "פרק ק״נ (י)", psalmRef: "תהילים פרק ק״נ" }
+      { num: 1, psalmNum: 16, title: "פרק ט״ז (א)", psalmRef: "תהילים פרק ט״ז" },
+      { num: 2, psalmNum: 32, title: "פרק ל״ב (ב)", psalmRef: "תהילים פרק ל״ב" },
+      { num: 3, psalmNum: 41, title: "פרק מ״א (ג)", psalmRef: "תהילים פרק מ״א" },
+      { num: 4, psalmNum: 42, title: "פרק מ״ב (ד)", psalmRef: "תהילים פרק מ״ב" },
+      { num: 5, psalmNum: 59, title: "פרק נ״ט (ה)", psalmRef: "תהילים פרק נ״ט" },
+      { num: 6, psalmNum: 77, title: "פרק ע״ז (ו)", psalmRef: "תהילים פרק ע״ז" },
+      { num: 7, psalmNum: 90, title: "פרק צ׳ (ז)", psalmRef: "תהילים פרק צ׳" },
+      { num: 8, psalmNum: 105, title: "פרק ק״ה (ח)", psalmRef: "תהילים פרק ק״ה" },
+      { num: 9, psalmNum: 137, title: "פרק קל״ז (ט)", psalmRef: "תהילים פרק קל״ז" },
+      { num: 10, psalmNum: 150, title: "פרק ק״נ (י)", psalmRef: "תהילים פרק ק״נ" }
     ];
 
     const STORAGE_KEY = "tikkun_haklali_read_v1";
     let readChapters = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+    const chapterCache = {};
     let activeIndex = 0;
 
     const chaptersGrid = document.getElementById("chaptersGrid");
@@ -404,6 +433,18 @@
     const prevChapterBtn = document.getElementById("prevChapterBtn");
     const nextChapterBtn = document.getElementById("nextChapterBtn");
     const toggleReadBtn = document.getElementById("toggleReadBtn");
+
+    function toHebrewNumeral(n) {
+      const ones = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
+      const tens = ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"];
+      if (n === 15) return "טו";
+      if (n === 16) return "טז";
+      const t = Math.floor(n / 10);
+      const o = n % 10;
+      const str = (tens[t] || "") + (ones[o] || "");
+      if (str.length === 1) return str + "׳";
+      return str.slice(0, -1) + "״" + str.slice(-1);
+    }
 
     function saveProgress() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify([...readChapters]));
@@ -426,19 +467,55 @@
       readCounter.textContent = `פרקים שסומנו שנקראו: ${readChapters.size} / ${chapters.length}`;
     }
 
-    function openModal(idx) {
+    async function loadChapterVerses(ch) {
+      if (chapterCache[ch.psalmNum]) {
+        return chapterCache[ch.psalmNum];
+      }
+      const res = await fetch(`https://www.sefaria.org/api/texts/Psalms.${ch.psalmNum}?context=0&pad=0`);
+      if (!res.ok) {
+        throw new Error("Network error");
+      }
+      const data = await res.json();
+      const verses = Array.isArray(data.he) ? data.he : [];
+      const html = verses
+        .map((verse, idx) => {
+          const cleanText = String(verse).replace(/<[^>]*>/g, "");
+          const label = toHebrewNumeral(idx + 1);
+          return `<p class="verse-line"><span class="verse-num">(${label})</span> ${cleanText}</p>`;
+        })
+        .join("");
+      chapterCache[ch.psalmNum] = html || "<p>לא נמצא תוכן לפרק זה.</p>";
+      return chapterCache[ch.psalmNum];
+    }
+
+    async function openModal(idx) {
       activeIndex = idx;
       const ch = chapters[activeIndex];
       const isRead = readChapters.has(ch.num);
+
       modalTitle.textContent = `${ch.title} — ${ch.psalmRef}`;
-      modalBody.innerHTML = `
-        <p>מקור הפרק: <strong>${ch.psalmRef}</strong> (פרק ${ch.num} מתוך 10 פרקי תיקון הכללי).</p>
-        <p style="margin-top: 10px; color: #5C5552;">ניתן לסמן את הפרק כנקרא בתחתית או לעבור בין הפרקים באמצעות הכפתורים.</p>
-      `;
       toggleReadBtn.textContent = isRead ? "בטל סימון קריאה" : "סומן שנקרא";
       prevChapterBtn.disabled = activeIndex === 0;
       nextChapterBtn.disabled = activeIndex === chapters.length - 1;
       modal.classList.add("open");
+      modal.querySelector(".modal-box").scrollTop = 0;
+
+      if (chapterCache[ch.psalmNum]) {
+        modalBody.innerHTML = chapterCache[ch.psalmNum];
+        return;
+      }
+
+      modalBody.innerHTML = `<p style="color: #5C5552;">טוען את ${ch.psalmRef}...</p>`;
+      try {
+        const html = await loadChapterVerses(ch);
+        if (chapters[activeIndex]?.psalmNum === ch.psalmNum) {
+          modalBody.innerHTML = html;
+        }
+      } catch (err) {
+        if (chapters[activeIndex]?.psalmNum === ch.psalmNum) {
+          modalBody.innerHTML = `<p style="color: #D92B2B;">לא ניתן לטעון את הפרק כרגע. בדוק חיבור לאינטרנט ונסה שוב.</p>`;
+        }
+      }
     }
 
     function closeModal() {
