@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>תיקון הכללי — האש שלי תוקד עד ביאת המשיח</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-warm: #FAF6F0;
+      --card-bg: rgba(255, 252, 247, 0.9);
+      --card-border: rgba(180, 120, 45, 0.24);
+      --ink-main: #1F1A17;
+      --ink-muted: #5A4E46;
+      --accent-red: #C81E1E;
+      --accent-orange: #EA580C;
+      --accent-gold: #F59E0B;
+      --done-bg: #ECFDF5;
+      --done-border: #10B981;
+      --done-text: #065F46;
+      --shadow-soft: 0 10px 30px rgba(31, 26, 23, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background-color: var(--bg-warm);
+      color: var(--ink-main);
+      font-family: 'Heebo', sans-serif;
+      direction: rtl;
+      text-align: right;
+      overflow-x: hidden;
+    }
+
+    /* שכבת רקע של קיר בהיר, קנבס כהה וסמל האש שלי */
+    .emblem-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #EFECE6;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.75) 0%, transparent 45%),
+        radial-gradient(circle at 80% 75%, rgba(214, 206, 194, 0.55) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.015) 0px, rgba(0, 0, 0, 0.015) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.012) 0px, rgba(0, 0, 0, 0.012) 1px, transparent 1px, transparent 4px);
+    }
+
+    .canvas-frame {
+      width: min(92vw, 430px);
+      aspect-ratio: 3 / 4.2;
+      background: #09090B;
+      border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 14px;
+      opacity: 0.24;
+    }
+
+    .canvas-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 28px 16px 44px;
+    }
+
+    .hero-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 26px 20px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .badge-fire {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(234, 88, 12, 0.18));
+      border: 1px solid rgba(234, 88, 12, 0.3);
+      color: #9A3412;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: clamp(2.1rem, 6vw, 3rem);
+      font-weight: 900;
+      color: #991B1B;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: var(--ink-muted);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .progress-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(180, 120, 45, 0.16);
+    }
+
+    .progress-pill {
+      background: #FFF7ED;
+      border: 1px solid rgba(234, 88, 12, 0.25);
+      color: #7C2D12;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.98rem;
+    }
+
+    .btn-reset {
+      background: #FFFFFF;
+      border: 1px solid rgba(120, 53, 15, 0.25);
+      color: #7C2D12;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-reset:hover {
+      background: #FFEDD5;
+      transform: translateY(-1px);
+    }
+
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 560px) {
+      .chapters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chapter-card {
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      text-align: right;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(31, 26, 23, 0.05);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(31, 26, 23, 0.1);
+      border-color: rgba(234, 88, 12, 0.5);
+    }
+
+    .chapter-card.is-read {
+      background: rgba(236, 253, 245, 0.94);
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .chapter-title {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink-main);
+    }
+
+    .read-status {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: #92400E;
+      white-space: nowrap;
+    }
+
+    .chapter-card.is-read .read-status {
+      background: #D1FAE5;
+      color: var(--done-text);
+    }
+
+    .contact-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .contact-card h2 {
+      margin: 0 0 6px;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.45rem;
+      color: var(--ink-main);
+    }
+
+    .contact-phone {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      margin-bottom: 14px;
+      letter-spacing: 0.03em;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .btn-call, .btn-whatsapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 13px 18px;
+      border-radius: 14px;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .btn-call {
+      background: linear-gradient(90deg, #EA580C, #DC2626);
+      color: #FFFFFF;
+      box-shadow: 0 8px 18px rgba(220, 38, 38, 0.22);
+    }
+
+    .btn-whatsapp {
+      background: #DCFCE7;
+      color: #14532D;
+      border: 1px solid #86EFAC;
+    }
+
+    .btn-call:hover, .btn-whatsapp:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    footer {
+      text-align: center;
+      padding: 12px 10px 4px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #3F3630;
+    }
+
+    /* מודאל פנימי לקריאת פרק */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(20, 15, 12, 0.62);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: min(100%, 680px);
+      max-height: 88vh;
+      background: #FFFDF9;
+      border: 1px solid rgba(180, 120, 45, 0.3);
+      border-radius: 22px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(180, 120, 45, 0.18);
+      background: #FAF4EA;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #991B1B;
+    }
+
+    .btn-close {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--ink-main);
+    }
+
+    .modal-body {
+      padding: 22px 20px;
+      overflow-y: auto;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.32rem;
+      line-height: 1.95;
+      color: var(--ink-main);
+      white-space: pre-line;
+    }
+
+    .modal-footer {
+      padding: 14px 20px 18px;
+      border-top: 1px solid rgba(180, 120, 45, 0.18);
+      background: #FAF4EA;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-mark-read {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      background: #FEF3C7;
+      color: #78350F;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .btn-mark-read.is-read {
+      background: #D1FAE5;
+      border-color: #10B981;
+      color: #065F46;
+    }
+
+    .modal-nav-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 53, 15, 0.25);
+      background: #FFFFFF;
+      color: var(--ink-main);
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 0.96rem;
+      cursor: pointer;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <!-- רקע להבה "האש שלי" והכיתוב "תוקד עד ביאת המשיח" -->
+  <div class="emblem-backdrop" aria-hidden="true">
+    <div class="canvas-frame">
+      <svg viewBox="0 0 600 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="האש שלי תוקד עד ביאת המשיח">
+        <defs>
+          <linearGradient id="flameGrad" x1="50%" y1="4%" x2="50%" y2="82%">
+            <stop offset="0%" stop-color="#FFF033" />
+            <stop offset="34%" stop-color="#FF9E00" />
+            <stop offset="72%" stop-color="#FF3D00" />
+            <stop offset="100%" stop-color="#D50000" />
+          </linearGradient>
+          <linearGradient id="bottomArcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FF2A00" />
+            <stop offset="50%" stop-color="#FF8C00" />
+            <stop offset="100%" stop-color="#FFE600" />
+          </linearGradient>
+          <path id="bottomInscriptionArc" d="M 110,555 Q 300,665 490,555" />
+        </defs>
+
+        <!-- להבת "האש שלי" באותיות עבריות קריאות -->
+        <g fill="url(#flameGrad)">
+          <!-- להבה עליונה מרכזית -->
+          <path d="M 295,62 C 268,118 258,162 278,205 C 292,235 282,258 264,274 C 288,274 316,254 322,222 C 3
