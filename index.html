@@ -106,6 +106,33 @@
       font-size: 0.98rem;
     }
 
+    .kavana-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(242, 100, 25, 0.28);
+      border-right: 5px solid var(--accent-orange);
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .kavana-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--accent-red);
+      margin-bottom: 10px;
+    }
+
+    .kavana-text {
+      font-size: 1.04rem;
+      line-height: 1.85;
+      color: var(--text-main);
+    }
+
+    .kavana-text p + p {
+      margin-top: 10px;
+    }
+
     .progress-bar-box {
       background: var(--card-bg);
       border: 1px solid var(--border-soft);
@@ -364,6 +391,15 @@
       <h1>תיקון הכללי</h1>
       <p class="subtitle">לחץ על פרק לפתיחה פנימית וסימון קריאה</p>
     </header>
+
+    <section class="kavana-card" aria-label="נוסח קישור עצמי לפני אמירת תיקון הכללי">
+      <div class="kavana-title">טוב לומר זאת לפני אמירת העשרה מזמורים:</div>
+      <div class="kavana-text">
+        <p>הריני מקשר עצמי באמירת העשרה מזמורים אלו לכל הצדיקים האמיתיים שבדורנו, ולכל הצדיקים האמיתיים שוכני עפר קדושים אשר בארץ המה, ובפרט לרבינו הקדוש, צדיק יסוד עולם, נחל נובע מקור חכמה, רבינו נחמן בן פֵיגֶא, זכותו יגן עלינו, שגילה תיקון זה.</p>
+        <p>לְכוּ נְרַנְּנָה לַיהוָה נָרִיעָה לְצוּר יִשְׁעֵנוּ: נְקַדְּמָה פָנָיו בְּתוֹדָה בִּזְמִרוֹת נָרִיעַ לוֹ: כִּי אֵל גָּדוֹל יְהוָה וּמֶלֶךְ גָּדוֹל עַל כָּל אֱלֹהִים:</p>
+        <p>הריני מזמן את פי להודות וּלְהלל וּלְשבח את בוראי. לְשֵם יִחוּד קוּדְשָא בְּרִיךְ הוּא וּשְכִינְתֵּהּ בִּדְחִילוּ וּרְחִימוּ על ידי ההוא טמיר ונעלם בשם כל ישראל.</p>
+      </div>
+    </section>
 
     <section class="progress-bar-box" aria-label="מעקב קריאה">
       <div id="readCounter">פרקים שסומנו שנקראו: 0 / 10</div>
